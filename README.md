@@ -1,8 +1,6 @@
 # RedisCounterCache
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/redis_counter_cache`. To experiment with that code, run `bin/console` for an interactive prompt.
-
-TODO: Delete this and the text above, and describe your gem
+Counter cache function by Redis
 
 ## Installation
 
@@ -22,18 +20,30 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+```ruby
+# create_table :users do |t|
+# end
+class User < ActiveRecord::Base
+  include Redis::Objects
+  include RedisCounterCache
 
-## Development
+  has_many :user_items
+  redis_counter_cache :user_items
+end
 
-After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
+# create_table :user_items do |t|
+#   t.integer :user_id
+# end
+class UserItem < ActiveRecord::Base
+  belongs_to :user
+end
 
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
-
-## Contributing
-
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/redis_counter_cache. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](contributor-covenant.org) code of conduct.
-
+user = User.create
+user.user_items.create
+user.update_user_items_count_cache # specify updating cache when chenge
+user.user_items_count # get count with a cache
+# => 1
+```
 
 ## License
 
