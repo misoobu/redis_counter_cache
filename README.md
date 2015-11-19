@@ -40,7 +40,7 @@ end
 
 user = User.create
 user.user_items.create
-user.update_user_items_count_cache # specify updating cache when chenge
+user.update_user_items_count_cache # specify updating cache when change
 user.user_items_count # get count with a cache
 # => 1
 ```
